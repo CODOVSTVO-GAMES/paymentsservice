@@ -10,7 +10,7 @@ import { Product } from 'src/models/Product';
       port: 5432,
       username: 'keshox',
       password: 'example',
-      database: 'userdb',
+      database: 'paymentsdb',
       entities: [Product],
       synchronize: true,
       autoLoadEntities: true,
