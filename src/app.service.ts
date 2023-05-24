@@ -172,7 +172,6 @@ export class AppService {
         const obj = JSON.parse(JSON.stringify(dataDTO))
         let keys = Object.keys(obj)
         keys = keys.sort((a, b) => a.localeCompare(b))
-        console.log(keys)
 
         let str = ''
         for (let l = 0; l < keys.length; l++) {
