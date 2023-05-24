@@ -132,7 +132,6 @@ export class AppService {
     }
 
     async okCallbackGetLogic(dataDTO: DataDTO): Promise<number> {
-        console.log('запрос пришел' + dataDTO)
         //проверка подписи запроса
         if (dataDTO.sig != this.hashGenerator(this.getSigString(dataDTO))) return 104
 
@@ -166,6 +165,8 @@ export class AppService {
         const obj = JSON.parse(JSON.stringify(dataDTO))
         console.log(obj)
         let keys = Object.keys(obj)
+        console.log(keys)
+
         keys = keys.sort((a, b) => a.localeCompare(b))
         let str = ''
         for (const key in keys) {
