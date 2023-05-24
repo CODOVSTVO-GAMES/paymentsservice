@@ -5,13 +5,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './models/Product';
 import { DataDTO } from './DTO/DataDTO';
+import * as crypto from 'crypto';
+import { Transaction } from './models/Transaction';
 
 
 @Injectable()
 export class AppService {
 
     constructor(
-        @InjectRepository(Product) private productsRepo: Repository<Product>
+        @InjectRepository(Product) private productsRepo: Repository<Product>,
+        @InjectRepository(Transaction) private transactionRepo: Repository<Transaction>,
     ) { }
 
 
@@ -79,11 +82,10 @@ export class AppService {
 
     async okCallbackGetResponser(data: any) {
         const responseDTO = new ResponseDTO()
-        let status = 200
+        let status = 9999
 
         try {
-            const productsArray = await this.okCallbackGetHandler(data)
-            responseDTO.data = productsArray
+            status = await this.okCallbackGetHandler(data)
         }
         catch (e) {
             if (e == 'sessions not found' || e == 'session expired') {
@@ -105,7 +107,7 @@ export class AppService {
         return responseDTO
     }
 
-    private async okCallbackGetHandler(data: any): Promise<Array<Product>> {
+    private async okCallbackGetHandler(data: any): Promise<number> {
         let requestDTO;
         try {
             requestDTO = new RequestDTO(data.data, data.serverHash)
@@ -120,7 +122,6 @@ export class AppService {
         let dataDTO
         try {
             const obj = JSON.parse(JSON.stringify(requestDTO.data))
-            console.log(obj)
             dataDTO = new DataDTO(obj.transaction_id, obj.uid, obj.sig, obj.transaction_time, obj.product_code, obj.call_id, obj.amount, obj.application_key)
         } catch (e) {
             throw "parsing data error"
@@ -129,9 +130,86 @@ export class AppService {
         return await this.okCallbackGetLogic(dataDTO)
     }
 
-    async okCallbackGetLogic(dataDTO: DataDTO): Promise<Array<Product>> {
-        console.log(dataDTO)
-        return await this.findAllProducts();
+    async okCallbackGetLogic(dataDTO: DataDTO): Promise<number> {
+        console.log('запрос пришел' + dataDTO)
+        //проверка подписи запроса
+        if (dataDTO.sig != this.hashGenerator(this.getSigString(dataDTO))) return 104
+
+        console.log('sig valid')
+        //сохранитьт информацию о транзакции
+
+        //проверка подлинности товара
+        if (!await this.isProductValid(dataDTO)) return 1001
+
+        //если транзакции не существует
+        if (!await this.isTransactionAvailabilityByCallId(dataDTO.call_id)) {
+            //создать новую транзакцию
+            await this.createTransaction(dataDTO.transaction_id, dataDTO.call_id, dataDTO.userId, dataDTO.transaction_time, dataDTO.amount, dataDTO.product_code)
+        }
+
+        return 200
+    }
+
+    private async isProductValid(dataDTO: DataDTO) {
+        const products = await this.findAllProducts()
+
+        for (let l = 0; l < products.length; l++) {
+            if (products[l].id.toString() == dataDTO.product_code && products[l].price == dataDTO.amount) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private getSigString(dataDTO: DataDTO): string {
+        const obj = JSON.parse(JSON.stringify(dataDTO))
+        let keys = Object.keys(obj)
+        keys = keys.sort((a, b) => a.localeCompare(b))
+        let str = ''
+        for (const key in keys) {
+            str = str + `${key}=${obj[key]};`
+        }
+        str = str + 'F67457E6A1D2E8AD8EF25527'
+        return str
+    }
+
+    private hashGenerator(str: string): string {
+        console.log(str)
+        const hash = crypto.createHash('md5').update(str).digest('hex')
+        console.log(hash)
+        return hash
+    }
+
+    private async createTransaction(transactionId: string, callId: string, userId: string, transactionTimeOK: string, price: number, productId: string) {
+        return await this.transactionRepo.save(
+            this.transactionRepo.create(
+                {
+                    transactionId: transactionId,
+                    callId: callId,
+                    userId: userId,
+                    transactionTimeOK: transactionTimeOK,
+                    price: price,
+                    productId: productId,
+                    createDate: Date.now()
+                }
+            )
+        )
+    }
+
+    private async isTransactionAvailabilityByCallId(callId: string): Promise<boolean> {
+        const transaction = await this.transactionRepo.find({
+            where: {
+                callId: callId
+            }
+        }
+        )
+
+        if (transaction.length > 0) {
+            return true
+        }
+        else {
+            return false
+        }
     }
 
 }

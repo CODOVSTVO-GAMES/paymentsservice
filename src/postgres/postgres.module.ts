@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from 'src/models/Product';
+import { Transaction } from 'src/models/Transaction';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { Product } from 'src/models/Product';
       username: 'keshox',
       password: 'example',
       database: 'paymentsdb',
-      entities: [Product],
+      entities: [Product, Transaction],
       synchronize: true,
       autoLoadEntities: true,
     }),

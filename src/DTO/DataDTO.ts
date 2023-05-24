@@ -1,22 +1,21 @@
 export class DataDTO {
-    transactionId: string
+    transaction_id: string
     userId: string
     sig: string
-    transactionTime: string
-    productCode: string
-    callId: string
+    transaction_time: string
+    product_code: string
+    call_id: string
     amount: number
-    applicationKey: string
+    application_key: string
 
-
-    constructor(transactionId: string, userId: string, sig: string, transactionTime: string, productCode: string, callId: string, amount: number, applicationKey: string) {
-        this.transactionId = transactionId
+    constructor(transaction_id: string, userId: string, sig: string, transaction_time: string, product_code: string, call_id: string, amount: number, application_key: string) {
+        this.transaction_id = transaction_id
         this.userId = userId
         this.sig = sig
-        this.transactionTime = transactionTime
-        this.productCode = productCode
-        this.callId = callId
+        this.transaction_time = transaction_time
+        this.product_code = product_code
+        this.call_id = call_id
         this.amount = amount
-        this.applicationKey = applicationKey
+        this.application_key = application_key
     }
 }
