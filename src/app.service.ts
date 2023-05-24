@@ -103,6 +103,7 @@ export class AppService {
             console.log("Ошибка " + e)
         }
         responseDTO.status = status
+        console.log('status ' + status)
 
         return responseDTO
     }
