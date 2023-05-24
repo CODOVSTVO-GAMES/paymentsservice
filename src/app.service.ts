@@ -120,12 +120,15 @@ export class AppService {
             throw "server hash bad"
         }
 
-        let dataDTO
+        // let dataDTO
         try {
             const obj = JSON.parse(JSON.stringify(requestDTO.data))
             console.log(obj)
             console.log(this.getSigString(obj))
-            dataDTO = new DataDTO(obj.transaction_id, obj.uid, obj.sig, obj.transaction_time, obj.product_code, obj.call_id, obj.amount, obj.application_key)
+
+
+
+            // dataDTO = new DataDTO(obj.transaction_id, obj.uid, obj.sig, obj.transaction_time, obj.product_code, obj.call_id, obj.amount, obj.application_key)
         } catch (e) {
             throw "parsing data error"
         }
@@ -133,7 +136,9 @@ export class AppService {
         //проверка подписи запроса
         // if (dataDTO.sig != this.hashGenerator(this.getSigString(dataDTO))) return 104
 
-        return await this.okCallbackGetLogic(dataDTO)
+        return 1
+
+        // return await this.okCallbackGetLogic(dataDTO)
     }
 
     async okCallbackGetLogic(dataDTO: DataDTO): Promise<number> {
@@ -171,14 +176,14 @@ export class AppService {
 
         let str = ''
         for (let l = 0; l < keys.length; l++) {
-            if (keys[l] == 'sig') continue
+            if (keys[l] == 'sig' || keys[l] == 'session_key' || keys[l] == 'access_token') continue
             str = str + `${keys[l]}=${obj[keys[l]]}&`
         }
         let str2 = str.substring(0, str.length - 1)
         const str3 = str2
         const str4 = str
-        str2 = str2 + 'F67457E6A1D2E8AD8EF25527'
-        str = str + 'F67457E6A1D2E8AD8EF25527'
+        str2 = str2 + 'session_secret_key=F67457E6A1D2E8AD8EF25527'
+        str = str + 'session_secret_key=F67457E6A1D2E8AD8EF25527'
 
         this.hashGenerator(str)
         this.hashGenerator(str2)
