@@ -4,12 +4,12 @@ export class DataDTO {
     sig: string
     transactionTime: string
     productCode: string
-    callId: number
+    callId: string
     amount: number
     applicationKey: string
 
 
-    constructor(transactionId: string, userId: string, sig: string, transactionTime: string, productCode: string, callId: number, amount: number, applicationKey: string) {
+    constructor(transactionId: string, userId: string, sig: string, transactionTime: string, productCode: string, callId: string, amount: number, applicationKey: string) {
         this.transactionId = transactionId
         this.userId = userId
         this.sig = sig
@@ -17,6 +17,6 @@ export class DataDTO {
         this.productCode = productCode
         this.callId = callId
         this.amount = amount
-        this.applicationKey
+        this.applicationKey = applicationKey
     }
 }
