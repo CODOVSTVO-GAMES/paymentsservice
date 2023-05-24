@@ -120,21 +120,17 @@ export class AppService {
             throw "server hash bad"
         }
 
-        // let dataDTO
+        let dataDTO
+        let obj
         try {
-            const obj = JSON.parse(JSON.stringify(requestDTO.data))
-            console.log(obj)
-            console.log(this.getSigString(obj))
-
-
-
-            // dataDTO = new DataDTO(obj.transaction_id, obj.uid, obj.sig, obj.transaction_time, obj.product_code, obj.call_id, obj.amount, obj.application_key)
+            obj = JSON.parse(JSON.stringify(requestDTO.data))
+            dataDTO = new DataDTO(obj.transaction_id, obj.uid, obj.sig, obj.transaction_time, obj.product_code, obj.call_id, obj.amount, obj.application_key)
         } catch (e) {
             throw "parsing data error"
         }
 
-        //проверка подписи запроса
-        // if (dataDTO.sig != this.hashGenerator(this.getSigString(dataDTO))) return 104
+        // проверка подписи запроса
+        if (dataDTO.sig != this.hashGenerator(this.getSigString(obj))) return 104
 
         return 1
 
@@ -178,12 +174,8 @@ export class AppService {
             if (keys[l] == 'sig' || keys[l] == 'session_key' || keys[l] == 'access_token') continue
             str = str + `${keys[l]}=${obj[keys[l]]}`
         }
-        let str2 = str.substring(0, str.length - 1)
-        str2 = str2 + 'F67457E6A1D2E8AD8EF25527'
         str = str + 'F67457E6A1D2E8AD8EF25527'
 
-        this.hashGenerator(str)
-        this.hashGenerator(str2)
         return str
     }
 
