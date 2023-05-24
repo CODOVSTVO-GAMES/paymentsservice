@@ -123,6 +123,7 @@ export class AppService {
         let dataDTO
         try {
             const obj = JSON.parse(JSON.stringify(requestDTO.data))
+            console.log(obj)
             dataDTO = new DataDTO(obj.transaction_id, obj.uid, obj.sig, obj.transaction_time, obj.product_code, obj.call_id, obj.amount, obj.application_key)
         } catch (e) {
             throw "parsing data error"
