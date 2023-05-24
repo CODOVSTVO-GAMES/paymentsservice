@@ -11,5 +11,10 @@ export class AppController {
     async getHello(data: any): Promise<ResponseDTO> {
         return await this.appService.productsGetResponser(data)
     }
-    
+
+    @EventPattern('ok_callback')
+    async okCallback(data: any): Promise<ResponseDTO> {
+        console.log(data)
+        return new ResponseDTO()
+    }
 }

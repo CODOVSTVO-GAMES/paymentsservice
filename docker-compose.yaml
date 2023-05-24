@@ -4,8 +4,6 @@ services:
   app:
     build: .
     restart: always
-    # ports: 
-    # - 9601:9601
     depends_on:
       - psqldb
     networks:
