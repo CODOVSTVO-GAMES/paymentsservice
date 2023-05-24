@@ -130,7 +130,6 @@ export class AppService {
         }
 
         // проверка подписи запроса
-        console.log('okhash ' + dataDTO.sig)
         if (dataDTO.sig != this.hashGenerator(this.getSigString(obj))) return 104
 
         return await this.okCallbackGetLogic(dataDTO)
@@ -177,7 +176,6 @@ export class AppService {
 
     private hashGenerator(str: string): string {
         const hash = crypto.createHash('md5').update(str).digest('hex')
-        console.log("myhash " + hash)
         return hash
     }
 

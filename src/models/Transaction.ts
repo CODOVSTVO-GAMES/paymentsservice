@@ -23,6 +23,6 @@ export class Transaction {
     @Column()
     productId: string
 
-    @Column()
+    @Column({type: "bigint"})
     createDate: number
 }
