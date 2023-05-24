@@ -130,13 +130,13 @@ export class AppService {
             throw "parsing data error"
         }
 
+        //проверка подписи запроса
+        // if (dataDTO.sig != this.hashGenerator(this.getSigString(dataDTO))) return 104
+
         return await this.okCallbackGetLogic(dataDTO)
     }
 
     async okCallbackGetLogic(dataDTO: DataDTO): Promise<number> {
-        //проверка подписи запроса
-        if (dataDTO.sig != this.hashGenerator(this.getSigString(dataDTO))) return 104
-
         console.log('sig valid')
         //сохранитьт информацию о транзакции
 
@@ -165,7 +165,6 @@ export class AppService {
 
     private getSigString(dataDTO: object): string {
         const obj = JSON.parse(JSON.stringify(dataDTO))
-        console.log(obj)
         let keys = Object.keys(obj)
         keys = keys.sort((a, b) => a.localeCompare(b))
         console.log(keys)
