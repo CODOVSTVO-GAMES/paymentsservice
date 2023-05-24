@@ -142,7 +142,7 @@ export class AppService {
         if (!await this.isProductValid(dataDTO)) return 1001
 
         //если транзакции не существует
-        if (!await this.isTransactionAvailabilityByCallId(dataDTO.call_id)) {
+        if (!await this.isTransactionAvailabilityByTransactionId(dataDTO.transaction_id)) {
             //создать новую транзакцию
             await this.createTransaction(dataDTO.transaction_id, dataDTO.call_id, dataDTO.user_id, dataDTO.transaction_time, dataDTO.amount, dataDTO.product_code)
         }
@@ -200,10 +200,10 @@ export class AppService {
         )
     }
 
-    private async isTransactionAvailabilityByCallId(callId: string): Promise<boolean> {
+    private async isTransactionAvailabilityByTransactionId(transactionId: string): Promise<boolean> {
         const transaction = await this.transactionRepo.find({
             where: {
-                callId: callId
+                transactionId: transactionId
             }
         }
         )
