@@ -177,7 +177,7 @@ export class AppService {
         let str = ''
         for (let l = 0; l < keys.length; l++) {
             if (keys[l] == 'sig' || keys[l] == 'session_key' || keys[l] == 'access_token') continue
-            str = str + `${keys[l]}=${obj[keys[l]]}&`
+            str = str + `${keys[l]}=${obj[keys[l]]}`
         }
         let str2 = str.substring(0, str.length - 1)
         const str3 = str2
