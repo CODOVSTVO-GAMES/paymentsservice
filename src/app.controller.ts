@@ -14,7 +14,6 @@ export class AppController {
 
     @EventPattern('ok_callback')
     async okCallback(data: any): Promise<ResponseDTO> {
-        console.log(data)
-        return new ResponseDTO()
+        return await this.appService.okCallbackGetResponser(data)
     }
 }
