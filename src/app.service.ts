@@ -130,17 +130,13 @@ export class AppService {
         }
 
         // проверка подписи запроса
+        console.log('okhash ' + dataDTO.sig)
         if (dataDTO.sig != this.hashGenerator(this.getSigString(obj))) return 104
 
-        return 1
-
-        // return await this.okCallbackGetLogic(dataDTO)
+        return await this.okCallbackGetLogic(dataDTO)
     }
 
     async okCallbackGetLogic(dataDTO: DataDTO): Promise<number> {
-        console.log('sig valid')
-        //сохранитьт информацию о транзакции
-
         //проверка подлинности товара
         if (!await this.isProductValid(dataDTO)) return 1001
 
@@ -180,9 +176,8 @@ export class AppService {
     }
 
     private hashGenerator(str: string): string {
-        console.log(str)
         const hash = crypto.createHash('md5').update(str).digest('hex')
-        console.log(hash)
+        console.log("myhash " + hash)
         return hash
     }
 
