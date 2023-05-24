@@ -181,8 +181,8 @@ export class AppService {
         let str2 = str.substring(0, str.length - 1)
         const str3 = str2
         const str4 = str
-        str2 = str2 + 'session_secret_key=F67457E6A1D2E8AD8EF25527'
-        str = str + 'session_secret_key=F67457E6A1D2E8AD8EF25527'
+        str2 = str2 + 'F67457E6A1D2E8AD8EF25527'
+        str = str + 'F67457E6A1D2E8AD8EF25527'
 
         this.hashGenerator(str)
         this.hashGenerator(str2)
