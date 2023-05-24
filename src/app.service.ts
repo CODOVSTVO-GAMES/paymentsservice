@@ -130,6 +130,7 @@ export class AppService {
     }
 
     async okCallbackGetLogic(dataDTO: DataDTO): Promise<Array<Product>> {
+        console.log(dataDTO)
         return await this.findAllProducts();
     }
 
