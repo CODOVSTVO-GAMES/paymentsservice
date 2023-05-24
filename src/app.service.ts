@@ -144,7 +144,7 @@ export class AppService {
         //если транзакции не существует
         if (!await this.isTransactionAvailabilityByCallId(dataDTO.call_id)) {
             //создать новую транзакцию
-            await this.createTransaction(dataDTO.transaction_id, dataDTO.call_id, dataDTO.userId, dataDTO.transaction_time, dataDTO.amount, dataDTO.product_code)
+            await this.createTransaction(dataDTO.transaction_id, dataDTO.call_id, dataDTO.user_id, dataDTO.transaction_time, dataDTO.amount, dataDTO.product_code)
         }
 
         return 200
@@ -168,9 +168,11 @@ export class AppService {
         console.log(keys)
 
         keys = keys.sort((a, b) => a.localeCompare(b))
+        console.log(keys)
+
         let str = ''
-        for (const key in keys) {
-            str = str + `${key}=${obj[key]};`
+        for (let l = 0; l < keys.length; l++) {
+            str = str + `${keys[l]}=${obj[keys[l]]};`
         }
         str = str + 'F67457E6A1D2E8AD8EF25527'
         return str
