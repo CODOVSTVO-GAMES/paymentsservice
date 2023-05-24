@@ -172,6 +172,7 @@ export class AppService {
 
         let str = ''
         for (let l = 0; l < keys.length; l++) {
+            if (keys[l] == 'sig') continue
             str = str + `${keys[l]}=${obj[keys[l]]};`
         }
         str = str + 'F67457E6A1D2E8AD8EF25527'
