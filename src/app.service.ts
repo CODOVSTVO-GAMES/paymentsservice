@@ -172,7 +172,6 @@ export class AppService {
         const obj = JSON.parse(JSON.stringify(dataDTO))
         let keys = Object.keys(obj)
         keys = keys.sort((a, b) => a.localeCompare(b))
-        console.log(keys)
 
         let str = ''
         for (let l = 0; l < keys.length; l++) {
@@ -180,15 +179,11 @@ export class AppService {
             str = str + `${keys[l]}=${obj[keys[l]]}`
         }
         let str2 = str.substring(0, str.length - 1)
-        const str3 = str2
-        const str4 = str
         str2 = str2 + 'F67457E6A1D2E8AD8EF25527'
         str = str + 'F67457E6A1D2E8AD8EF25527'
 
         this.hashGenerator(str)
         this.hashGenerator(str2)
-        this.hashGenerator(str3)
-        this.hashGenerator(str4)
         return str
     }
 
