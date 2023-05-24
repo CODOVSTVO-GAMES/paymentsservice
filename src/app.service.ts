@@ -170,7 +170,7 @@ export class AppService {
 
         let str = ''
         for (let l = 0; l < keys.length; l++) {
-            if (keys[l] == 'sig') continue
+            if (keys[l] == 'sig' || keys[l] == 'application_key') continue
             str = str + `${keys[l]}=${obj[keys[l]]}&`
         }
         let str2 = str.substring(0, str.length - 1)
