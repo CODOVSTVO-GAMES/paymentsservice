@@ -8,8 +8,8 @@ export class AppController {
     constructor(private readonly appService: AppService) { }
 
     @EventPattern('get_products')
-    async getHello(data: any): Promise<ResponseDTO> {
-        return await this.appService.productsGetResponser(data)
+    async getProducts(): Promise<ResponseDTO> {
+        return await this.appService.productsGetResponser()
     }
 
     @EventPattern('ok_callback')

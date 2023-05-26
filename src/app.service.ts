@@ -17,21 +17,19 @@ export class AppService {
     ) { }
 
 
-    async productsGetResponser(data: any) {
+    async productsGetResponser() {
         const responseDTO = new ResponseDTO()
         let status = 200
 
         try {
-            const productsArray = await this.productsGetHandler(data)
+            const productsArray = await this.productsGetHandler()
             responseDTO.data = productsArray
         }
         catch (e) {
             if (e == 'sessions not found' || e == 'session expired') {
                 status = 403//перезапуск клиента
             }
-            else if (e == 'server hash bad' || e == 'server DTO bad') {
-                status = 401//активно сигнализировать в логи
-            } else if (e == 'too many requests') {
+            else if (e == 'too many requests') {
                 status = 429//повторить запрос позже
             } else if (e == 'parsing data error') {
                 status = 400 //сервер не знает что делать
@@ -45,7 +43,7 @@ export class AppService {
         return responseDTO
     }
 
-    private async productsGetHandler(data: any): Promise<Array<Product>> {
+    private async productsGetHandler(): Promise<Array<Product>> {
         return await this.dataGetLogic()
     }
 
@@ -57,13 +55,6 @@ export class AppService {
 
     private async findAllProducts(): Promise<Product[]> {
         return await this.productsRepo.find()
-    }
-
-    private isServerHashBad(serverHash: string): boolean {
-        if (serverHash == '89969458273-the-main-prize-in-the-show-psychics') {
-            return false
-        }
-        return true
     }
 
     //---------------------------------------------------------
@@ -79,9 +70,7 @@ export class AppService {
             if (e == 'sessions not found' || e == 'session expired') {
                 status = 403//перезапуск клиента
             }
-            else if (e == 'server hash bad' || e == 'server DTO bad') {
-                status = 401//активно сигнализировать в логи
-            } else if (e == 'too many requests') {
+            else if (e == 'too many requests') {
                 status = 429//повторить запрос позже
             } else if (e == 'parsing data error') {
                 status = 400 //сервер не знает что делать
@@ -98,16 +87,14 @@ export class AppService {
 
     private async okCallbackGetHandler(data: any): Promise<number> {
         let dataDTO
-        let obj
         try {
-            obj = JSON.parse(data)
-            dataDTO = new DataDTO(obj.transaction_id, obj.uid, obj.sig, obj.transaction_time, obj.product_code, obj.call_id, obj.amount, obj.application_key)
+            dataDTO = new DataDTO(data.transaction_id, data.uid, data.sig, data.transaction_time, data.product_code, data.call_id, data.amount, data.application_key)
         } catch (e) {
             throw "parsing data error"
         }
 
         // проверка подписи запроса
-        if (dataDTO.sig != this.hashGenerator(this.getSigString(obj))) return 104
+        if (dataDTO.sig != this.hashGenerator(this.getSigString(data))) return 104
 
         return await this.okCallbackGetLogic(dataDTO)
     }
