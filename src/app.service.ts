@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { RequestDTO } from './DTO/RequestDTO';
 import { ResponseDTO } from './DTO/ResponseDTO';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -47,17 +46,6 @@ export class AppService {
     }
 
     private async productsGetHandler(data: any): Promise<Array<Product>> {
-        let requestDTO;
-        try {
-            requestDTO = new RequestDTO(data.data, data.serverHash)
-        } catch (e) {
-            throw "server DTO bad"
-        }
-
-        if (this.isServerHashBad(requestDTO.serverHash)) {
-            throw "server hash bad"
-        }
-
         return await this.dataGetLogic()
     }
 
@@ -109,21 +97,10 @@ export class AppService {
     }
 
     private async okCallbackGetHandler(data: any): Promise<number> {
-        let requestDTO;
-        try {
-            requestDTO = new RequestDTO(data.data, data.serverHash)
-        } catch (e) {
-            throw "server DTO bad"
-        }
-
-        if (this.isServerHashBad(requestDTO.serverHash)) {
-            throw "server hash bad"
-        }
-
         let dataDTO
         let obj
         try {
-            obj = JSON.parse(JSON.stringify(requestDTO.data))
+            obj = JSON.parse(data)
             dataDTO = new DataDTO(obj.transaction_id, obj.uid, obj.sig, obj.transaction_time, obj.product_code, obj.call_id, obj.amount, obj.application_key)
         } catch (e) {
             throw "parsing data error"
