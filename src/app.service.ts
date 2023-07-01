@@ -22,8 +22,7 @@ export class AppService {
         let status = 200
 
         try {
-            const productsArray = await this.productsGetHandler()
-            responseDTO.data = productsArray
+            responseDTO.data = await this.dataGetLogic()
         }
         catch (e) {
             if (e == 'sessions not found' || e == 'session expired') {
@@ -41,10 +40,6 @@ export class AppService {
         responseDTO.status = status
 
         return responseDTO
-    }
-
-    private async productsGetHandler(): Promise<Array<Product>> {
-        return await this.dataGetLogic()
     }
 
     async dataGetLogic(): Promise<Array<Product>> {
